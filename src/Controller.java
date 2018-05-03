@@ -51,12 +51,14 @@ public class Controller implements Runnable {
             p.round0();
         }
         while (processVector.size() < 6);
+        processVector.clear();
         for (int i = 1; i <= numRounds; i++) {
             System.out.println("\n\nROUND " + i);
             round(i);
 
         }
-        processVector.clear();
+        while (processVector.size() < 6) {};
+
 
     }
 

@@ -26,9 +26,11 @@ public class Message {
         String s = path + ".prefixMatch(" + p + ")";
         for (int i : path) {
             if (i != p.elementAt(path.indexOf(i))) {
+                //System.out.println("\t" + s + "-> false");
                 return false;
             }
         }
+        //System.out.println("\t" + s + "-> true");
         return true;
     }
 

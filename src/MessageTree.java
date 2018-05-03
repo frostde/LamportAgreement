@@ -39,7 +39,7 @@ public class MessageTree {
                 MessageNode node = new MessageNode();
                 node.message = m;
                 parent.children.add(node);
-                System.out.println("\t[" + ownerpid + "]insert(" + m + "," + round + " ) -> parent " + parent.message);
+                //System.out.println("\t[" + ownerpid + "]insert(" + m + "," + round + " ) -> parent " + parent.message);
             }
         }
     }
@@ -58,5 +58,6 @@ public class MessageTree {
             System.out.println("\t[" + ownerpid + "]insert(" + m + "," + round + " ) -> parent " + parent.message);
         }
     }
+
 
 }

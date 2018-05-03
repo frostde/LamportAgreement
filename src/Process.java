@@ -88,11 +88,6 @@ public class Process implements Runnable {
                         Vector<Message> v = new Vector<>();
                         v.add(m);
                         tree.insert(v, 0);
-                        Vector<Message> t = new Vector<>();
-                        Message p = new Message(m);
-                        t.add(p);
-                        p.path.add(pid);
-                        tree.insert(t, 1);
                         newMessages.add(m);
                     }
                 }
@@ -107,10 +102,14 @@ public class Process implements Runnable {
         try {
             StringBuilder sb = new StringBuilder();
             System.out.println(newMessages.size());
+            Vector<Message> t = new Vector<>();
             for (Message m : newMessages) {
-                m.path.add(pid);
-                sb.append(m.toString() + "\n");
+                Message nw = new Message(m);
+                nw.path.add(pid);
+                t.add(nw);
+                sb.append(nw.toString() + "\n");
             }
+            tree.insert(t, round);
             for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
                 if (entry.getKey() != initiatorpid) {
                     writer = new BufferedWriter(new OutputStreamWriter(entry.getValue().getOutputStream()));
@@ -152,7 +151,6 @@ public class Process implements Runnable {
                                 c = is.read();
                                 sb.append((char)c);
                             }
-                            System.out.println("Process " + pid + " from " + entry.getKey());
                             for (String s : sb.toString().split("\n") ) {
                                 Message n = new Message(Integer.parseInt(s.substring(s.indexOf('{')+1, s.indexOf(','))));
                                 String path = s.substring(s.indexOf('[')+1, s.indexOf(']'));
@@ -169,119 +167,11 @@ public class Process implements Runnable {
                 System.out.println("\n");
             }
             controller.processfinished(this);
-            System.out.println("Process " + pid + ":");
-            for (MessageNode n : tree.root.children) {
-                System.out.println(n.message.toString());
-            }
-            System.out.println(tree.root.children.size());
-            System.out.println("\n");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-
-    /*public void initiate() {
-        try {
-            if (isInitiator) {
-                Semaphore processSemaphore = controller.getProcessSemaphore(pid);
-                processSemaphore.acquire();
-                int value = new Random().nextInt(2);
-                Message m;
-                for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
-                    writer = new BufferedWriter(new OutputStreamWriter(entry.getValue().getOutputStream()));
-                    if (isFaulty) {
-                        m = new Message(new Random().nextInt(2));
-                        m.path.add(pid);
-                        writer.write(m.toString() + "\n");
-                    } else {
-                        m = new Message(value);
-                        m.path.add(pid);
-                        writer.write(m.toString() + "\n");
-                    }
-                    writer.flush();
-                    System.out.println("Process " + pid + " is sending " + m.toString() + " to Process " + entry.getKey());
-                }
-                controller.processfinished(this);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void round0() {
-        try {
-            if (!isInitiator) {
-                BufferedReader reader;
-                for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
-                    if (controller.getProcessSemaphore(entry.getKey()).availablePermits() == 0) {
-                        initiatorpid = entry.getKey();
-                        reader = new BufferedReader(new InputStreamReader(entry.getValue().getInputStream()));
-                        String in = reader.readLine();
-                        int value = Integer.parseInt(in.substring(in.indexOf("{")+1,in.indexOf(",")));
-                        //int path = Integer.parseInt(in.substring(in.indexOf("[")+1,in.indexOf("]")));
-                        Message m = new Message(value);
-                        m.path.add(initiatorpid);
-                        tree.insert(m, 0);
-                        m.path.add(pid);
-                        tree.insert(m,1);
-                        //if (faulty) values[name] = (values[indexOfInitiator] == 0) ? 1 : 0;
-                        //else values[name] = values[indexOfInitiator];
-                    }
-                }
-                controller.processfinished(this);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void sendMsg(int round) throws IOException {
-        if (!isInitiator) {
-            for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
-                if (entry.getKey() != controller.initiatorpid && entry.getKey() != this.pid) {
-                    writer = new BufferedWriter(new OutputStreamWriter(entry.getValue().getOutputStream()));
-                    if (round == 1) {
-                        writer.write(tree.root.message.toString()  + "\n");
-                        System.out.println("Process " + pid + " is sending " + tree.root.message.toString() + " to Process " + entry.getKey());
-                    } else {
-                        for (Message m : newMessages) {
-                            writer.write(m.toString() + "\n");
-                            System.out.println("Process " + pid + " is sending " + m.toString() + " to Process " + entry.getKey());
-                        }
-                    }
-                    writer.flush();
-                }
-            }
-            System.out.println("\n");
-            controller.processfinished(this);
-        }
-    }
-
-    public void receiveMsg(int round) throws IOException {
-        if (!isInitiator) {
-            for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
-                if (entry.getKey() != initiatorpid) {
-                    reader = new BufferedReader(new InputStreamReader(entry.getValue().getInputStream()));
-                    String in = reader.readLine();
-                    int value = Integer.parseInt(in.substring(in.indexOf("{")+1,in.indexOf(",")));
-                    String path = in.substring(in.indexOf("[")+1,in.indexOf("]"));
-                    Message m = new Message(value);
-                    path = path.replaceAll("\\D+","");
-                    for (char x : path.toCharArray()) {
-                        m.path.add(Character.getNumericValue(x));
-                    }
-                    m.path.add(pid);
-                    tree.insert(m, round);
-                    newMessages.add(m);
-                    //System.out.println("Process " + pid + " received a value of " + m.toString() + " from Process " + entry.getKey());
-                }
-            }
-            controller.processfinished(this);
-            System.out.println(newMessages.size());
-        }
-    }*/
 
     private String identify() {
         if (isInitiator) {
