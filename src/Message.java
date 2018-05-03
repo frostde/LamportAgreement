@@ -1,3 +1,7 @@
+/*Daniel Frost
+* Eliza Karki
+* Project 3 Lamport Agreement Algorithm*/
+
 import java.util.Vector;
 
 /**
@@ -16,6 +20,10 @@ public class Message {
     public Message(Message m2) {
         inValue = m2.inValue;
         path = (Vector<Integer>) m2.path.clone();
+    }
+
+    public Message() {
+
     }
 
     public int senderPID() {

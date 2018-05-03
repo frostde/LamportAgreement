@@ -1,3 +1,7 @@
+/*Daniel Frost
+* Eliza Karki
+* Project 3 Lamport Agreement Algorithm*/
+
 import java.util.Vector;
 
 /**
@@ -9,6 +13,10 @@ public class MessageTree {
 
     public MessageTree(int p) {
         this.ownerpid = p;
+    }
+
+    public MessageTree() {
+
     }
 
     private MessageNode findParent(Message m, int r) {
@@ -32,7 +40,7 @@ public class MessageTree {
             root = new MessageNode();
             root.parent = null;
             root.message = messages.firstElement();
-            System.out.println("\t[" + ownerpid + "] insert(..round 0..) -> root " + root);
+            //System.out.println("\t[" + ownerpid + "] insert(..round 0..) -> root " + root);
         } else {
             for (Message m : messages) {
                 MessageNode parent = findParent(m, round);
@@ -57,6 +65,56 @@ public class MessageTree {
             parent.children.add(node);
             System.out.println("\t[" + ownerpid + "]insert(" + m + "," + round + " ) -> parent " + parent.message);
         }
+    }
+
+
+    /*public int decideValue() {
+        decide(0);
+    }*/
+
+    public MessageTree getChildTree(int i) {
+        MessageNode node = this.root.children.get(i);
+        MessageTree tree = new MessageTree();
+        tree.root = node;
+        return tree;
+    }
+
+    public int majority(Vector<MessageNode> messages) {
+        int ones = 0;
+        int zeros = 0;
+        int faulties = 0;
+        for (MessageNode m : messages) {
+            switch (m.message.outValue) {
+                case 0: {
+                    zeros++;
+                    break;
+                }
+                case 1: {
+                    ones++;
+                    break;
+                }
+                case -1: {
+                    faulties++;
+                    break;
+                }
+            }
+        }
+        if (ones >= zeros && ones >= faulties) {
+            if (ones == zeros) {
+                return 0;
+            }
+
+            if (ones == faulties) {
+                return 1;
+            }
+            return 1;
+        } else if (zeros >= ones && zeros >= faulties) {
+            if (ones == zeros || zeros == faulties) {
+                return 0;
+            }
+            return 0;
+        }
+        return -1;
     }
 
 

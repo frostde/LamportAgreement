@@ -1,3 +1,7 @@
+/*Daniel Frost
+* Eliza Karki
+* Project 3 Lamport Agreement Algorithm*/
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +25,7 @@ public class Controller implements Runnable {
     public Vector<Process> generals = new Vector<>();
 
     public void run() {
+        System.out.println("INITIATING");
         setUpPorts();
         semaphores = new HashMap<>();
         processVector = new Vector<>();
@@ -58,7 +63,24 @@ public class Controller implements Runnable {
 
         }
         while (processVector.size() < 6) {};
+        processVector.clear();
+        System.out.println("\n\nFinal Output:");
+        for (Process p : processes) {
+            if (p.pid == initiatorpid) {
+                if (p.pid == faultypid1 || p.pid == faultypid2) {
+                    System.out.println("Process " + p.pid + " [initiator + faulty] " + p.value);
+                } else {
+                    System.out.println("Process " + p.pid + " [initiator] " + p.value);
+                }
+            } else {
+                if (p.pid == faultypid1 || p.pid == faultypid2) {
+                    System.out.println("Process " + p.pid + " [faulty]" + p.TraverseTree(p.tree));
+                } else {
+                    System.out.println("Process " + p.pid + " " + p.TraverseTree(p.tree));
 
+                }
+            }
+        }
 
     }
 

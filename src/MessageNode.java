@@ -1,3 +1,7 @@
+/*Daniel Frost
+* Eliza Karki
+* Project 3 Lamport Agreement Algorithm*/
+
 import java.util.Vector;
 
 /**

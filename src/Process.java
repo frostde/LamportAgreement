@@ -1,3 +1,7 @@
+/*Daniel Frost
+* Eliza Karki
+* Project 3 Lamport Agreement Algorithm*/
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,7 +18,8 @@ public class Process implements Runnable {
     private boolean isFaulty;
     private Controller controller;
     public MessageTree tree;
-    private int value;
+    public int value;
+    public int initialValue;
     private BufferedReader reader;
     private BufferedWriter writer;
     private Map<Integer, Socket> sockets;
@@ -49,17 +54,17 @@ public class Process implements Runnable {
             if (isInitiator) {
                 Semaphore processSemaphore = controller.getProcessSemaphore(pid);
                 processSemaphore.acquire();
-                int value = new Random().nextInt(2);
-                System.out.println(controller.faultypid1 + " " + controller.faultypid2);
+                value = new Random().nextInt(2);
                 Message m = new Message(value);
                 m.path.add(pid);
+                m.outValue = value;
                 for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
                     writer = new BufferedWriter(new OutputStreamWriter(entry.getValue().getOutputStream()));
-                    if (entry.getKey() == controller.faultypid1 || entry.getKey() == controller.faultypid2) {
-                        Message f = new Message(-1);
-                        f.path.add(pid);
-                        writer.write(f.toString() + "\n");
-                        System.out.println(pid + " wrote " + f.toString() + " to " + entry.getKey());
+                    if (isFaulty) {
+                        Message faultyMessage = new Message(new Random().nextInt(2));
+                        faultyMessage.path.add(pid);
+                        writer.write(faultyMessage + "\n");
+                        System.out.println(pid + " wrote " + faultyMessage.toString() + " to " + entry.getKey());
 
                     } else {
                         writer.write(m.toString() + "\n");
@@ -83,8 +88,14 @@ public class Process implements Runnable {
                         initiatorpid = entry.getKey();
                         reader = new BufferedReader(new InputStreamReader(entry.getValue().getInputStream()));
                         String x = reader.readLine();
-                        Message m = new Message(Integer.parseInt(x.substring(x.indexOf('{')+1, x.indexOf(','))));
+                        Message m;
+                        if (isFaulty) {
+                            m = new Message(-1);
+                        } else {
+                            m = new Message(Integer.parseInt(x.substring(x.indexOf('{') + 1, x.indexOf(','))));
+                        }
                         m.path.add(initiatorpid);
+                        m.outValue = m.inValue;
                         Vector<Message> v = new Vector<>();
                         v.add(m);
                         tree.insert(v, 0);
@@ -101,13 +112,19 @@ public class Process implements Runnable {
     public void sendMsgs(int round) {
         try {
             StringBuilder sb = new StringBuilder();
-            System.out.println(newMessages.size());
             Vector<Message> t = new Vector<>();
+            Message nw = new Message();
             for (Message m : newMessages) {
-                Message nw = new Message(m);
+                nw = new Message(m);
                 nw.path.add(pid);
+                nw.outValue = nw.inValue;
                 t.add(nw);
                 sb.append(nw.toString() + "\n");
+            }
+            if (!isInitiator) {
+                for (int i = 0; i < 5; i++) {
+                    System.out.println("Process " + pid + " sent " + nw.toString() + " to process " + i);
+                }
             }
             tree.insert(t, round);
             for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
@@ -117,6 +134,7 @@ public class Process implements Runnable {
                     writer.flush();
                 }
             }
+            System.out.println("\n");
             newMessages.clear();
             controller.processfinished(this);
         } catch (Exception e) {
@@ -143,6 +161,7 @@ public class Process implements Runnable {
                             for (char c : path.toCharArray()) {
                                 n.path.add(Integer.parseInt(Character.toString(c)));
                             }
+                            n.outValue = n.inValue;
                             newMessages.add(n);
                         } else {
                             int c;
@@ -158,13 +177,13 @@ public class Process implements Runnable {
                                 for (char x : path.toCharArray()) {
                                     n.path.add(Integer.parseInt(Character.toString(x)));
                                 }
+                                n.outValue = n.inValue;
                                 newMessages.add(n);
                             }
                         }
                     }
                 }
                 tree.insert(newMessages, round);
-                System.out.println("\n");
             }
             controller.processfinished(this);
         } catch (Exception e) {
@@ -173,7 +192,7 @@ public class Process implements Runnable {
     }
 
 
-    private String identify() {
+    public String identify() {
         if (isInitiator) {
             if (isFaulty) {
                 return "Process " + pid + " [initiator + faulty]";
@@ -189,6 +208,37 @@ public class Process implements Runnable {
             }
         }
     }
+
+    public int TraverseTree(MessageTree tree) {
+
+        int childCount = tree.root.children.size();
+            if (childCount == 0) {
+
+            } else {
+                    if (tree.root.children.get(0).children.size() == 0) {
+                        return majorityOfChildren(tree.root);
+                    }
+                for (int i = 0; i < childCount - 1; i++) {
+                    MessageTree child = tree.getChildTree(i);
+                    if (child.root.children.size() > 0) {
+                        if (child.root.children.get(0).children.size() == 0) {
+                            return majorityOfChildren(child.root);
+                        }
+                    }
+                    return TraverseTree(child);
+                }
+            }
+
+        return 99;
+    }
+
+    public int majorityOfChildren(MessageNode node) {
+        if (node.children.size() == 0) {
+            return -99;
+        }
+        return this.tree.majority(node.children);
+    }
+
 
     private void setupSockets() {
         try {

@@ -1,0 +1,452 @@
+OUTPUT 1: Initiator is 4, and is also faulty.
+
+INITIATING
+Process 0
+Process 1
+Process 2
+Process 3
+Process 4 [initiator + faulty]
+Process 5
+Process 6
+
+
+ROUND 0 ----
+4 wrote {0,[4],-1} to 0
+4 wrote {0,[4],-1} to 1
+4 wrote {0,[4],-1} to 2
+4 wrote {1,[4],-1} to 3
+4 wrote {1,[4],-1} to 5
+4 wrote {1,[4],-1} to 6
+
+
+ROUND 1
+Process 0 sent {0,[4, 0],0} to process 0
+Process 0 sent {0,[4, 0],0} to process 1
+Process 0 sent {0,[4, 0],0} to process 2
+Process 0 sent {0,[4, 0],0} to process 3
+Process 0 sent {0,[4, 0],0} to process 4
+
+
+Process 1 sent {0,[4, 1],0} to process 0
+Process 1 sent {0,[4, 1],0} to process 1
+Process 1 sent {0,[4, 1],0} to process 2
+Process 1 sent {0,[4, 1],0} to process 3
+Process 1 sent {0,[4, 1],0} to process 4
+
+
+Process 2 sent {0,[4, 2],0} to process 0
+Process 2 sent {0,[4, 2],0} to process 1
+Process 2 sent {0,[4, 2],0} to process 2
+Process 2 sent {0,[4, 2],0} to process 3
+Process 2 sent {0,[4, 2],0} to process 4
+
+
+Process 3 sent {1,[4, 3],1} to process 0
+Process 3 sent {1,[4, 3],1} to process 1
+Process 3 sent {1,[4, 3],1} to process 2
+Process 3 sent {1,[4, 3],1} to process 3
+Process 3 sent {1,[4, 3],1} to process 4
+
+
+
+
+Process 5 sent {1,[4, 5],1} to process 0
+Process 5 sent {1,[4, 5],1} to process 1
+Process 5 sent {1,[4, 5],1} to process 2
+Process 5 sent {1,[4, 5],1} to process 3
+Process 5 sent {1,[4, 5],1} to process 4
+
+
+Process 6 sent {1,[4, 6],1} to process 0
+Process 6 sent {1,[4, 6],1} to process 1
+Process 6 sent {1,[4, 6],1} to process 2
+Process 6 sent {1,[4, 6],1} to process 3
+Process 6 sent {1,[4, 6],1} to process 4
+
+
+
+
+Final Output:
+Process 0 0
+Process 1 0
+Process 2 0
+Process 3 0
+Process 4 [initiator + faulty] 1
+Process 5 0
+Process 6 0
+
+
+Output 2:
+INITIATING
+Process 0
+Process 1
+Process 2 [faulty]
+Process 3 [initiator]
+Process 4
+Process 5
+Process 6 [faulty]
+
+
+ROUND 0 ----
+3 wrote {1,[3],1} to 0
+3 wrote {1,[3],1} to 1
+3 wrote {1,[3],1} to 2
+3 wrote {1,[3],1} to 4
+3 wrote {1,[3],1} to 5
+3 wrote {1,[3],1} to 6
+
+
+ROUND 1
+Process 0 sent {1,[3, 0],1} to process 0
+Process 0 sent {1,[3, 0],1} to process 1
+Process 0 sent {1,[3, 0],1} to process 2
+Process 0 sent {1,[3, 0],1} to process 3
+Process 0 sent {1,[3, 0],1} to process 4
+
+
+Process 1 sent {1,[3, 1],1} to process 0
+Process 1 sent {1,[3, 1],1} to process 1
+Process 1 sent {1,[3, 1],1} to process 2
+Process 1 sent {1,[3, 1],1} to process 3
+Process 1 sent {1,[3, 1],1} to process 4
+
+
+Process 2 sent {-1,[3, 2],-1} to process 0
+Process 2 sent {-1,[3, 2],-1} to process 1
+Process 2 sent {-1,[3, 2],-1} to process 2
+Process 2 sent {-1,[3, 2],-1} to process 3
+Process 2 sent {-1,[3, 2],-1} to process 4
+
+
+
+
+Process 4 sent {1,[3, 4],1} to process 0
+Process 4 sent {1,[3, 4],1} to process 1
+Process 4 sent {1,[3, 4],1} to process 2
+Process 4 sent {1,[3, 4],1} to process 3
+Process 4 sent {1,[3, 4],1} to process 4
+
+
+Process 5 sent {1,[3, 5],1} to process 0
+Process 5 sent {1,[3, 5],1} to process 1
+Process 5 sent {1,[3, 5],1} to process 2
+Process 5 sent {1,[3, 5],1} to process 3
+Process 5 sent {1,[3, 5],1} to process 4
+
+
+Process 6 sent {-1,[3, 6],-1} to process 0
+Process 6 sent {-1,[3, 6],-1} to process 1
+Process 6 sent {-1,[3, 6],-1} to process 2
+Process 6 sent {-1,[3, 6],-1} to process 3
+Process 6 sent {-1,[3, 6],-1} to process 4
+
+
+
+
+ROUND 2
+Process 0 sent {-1,[3, 6, 0],-1} to process 0
+Process 0 sent {-1,[3, 6, 0],-1} to process 1
+Process 0 sent {-1,[3, 6, 0],-1} to process 2
+Process 0 sent {-1,[3, 6, 0],-1} to process 3
+Process 0 sent {-1,[3, 6, 0],-1} to process 4
+
+
+Process 1 sent {-1,[3, 6, 1],-1} to process 0
+Process 1 sent {-1,[3, 6, 1],-1} to process 1
+Process 1 sent {-1,[3, 6, 1],-1} to process 2
+Process 1 sent {-1,[3, 6, 1],-1} to process 3
+Process 1 sent {-1,[3, 6, 1],-1} to process 4
+
+
+Process 2 sent {-1,[3, 6, 2],-1} to process 0
+Process 2 sent {-1,[3, 6, 2],-1} to process 1
+Process 2 sent {-1,[3, 6, 2],-1} to process 2
+Process 2 sent {-1,[3, 6, 2],-1} to process 3
+Process 2 sent {-1,[3, 6, 2],-1} to process 4
+
+
+
+
+Process 4 sent {-1,[3, 6, 4],-1} to process 0
+Process 4 sent {-1,[3, 6, 4],-1} to process 1
+Process 4 sent {-1,[3, 6, 4],-1} to process 2
+Process 4 sent {-1,[3, 6, 4],-1} to process 3
+Process 4 sent {-1,[3, 6, 4],-1} to process 4
+
+
+Process 5 sent {-1,[3, 6, 5],-1} to process 0
+Process 5 sent {-1,[3, 6, 5],-1} to process 1
+Process 5 sent {-1,[3, 6, 5],-1} to process 2
+Process 5 sent {-1,[3, 6, 5],-1} to process 3
+Process 5 sent {-1,[3, 6, 5],-1} to process 4
+
+
+Process 6 sent {1,[3, 5, 6],1} to process 0
+Process 6 sent {1,[3, 5, 6],1} to process 1
+Process 6 sent {1,[3, 5, 6],1} to process 2
+Process 6 sent {1,[3, 5, 6],1} to process 3
+Process 6 sent {1,[3, 5, 6],1} to process 4
+
+
+
+
+Final Output:
+Process 0 1
+Process 1 1
+Process 2 [faulty]-1
+Process 3 [initiator] 1
+Process 4 1
+Process 5 1
+Process 6 [faulty]-1
+
+Process finished with exit code 0
+
+Output 3:
+
+INITIATING
+Process 0 [initiator]
+Process 1 [faulty]
+Process 2
+Process 3
+Process 4
+Process 5 [faulty]
+Process 6
+
+
+ROUND 0 ----
+0 wrote {0,[0],0} to 1
+0 wrote {0,[0],0} to 2
+0 wrote {0,[0],0} to 3
+0 wrote {0,[0],0} to 4
+0 wrote {0,[0],0} to 5
+0 wrote {0,[0],0} to 6
+
+
+ROUND 1
+
+
+Process 1 sent {-1,[0, 1],-1} to process 0
+Process 1 sent {-1,[0, 1],-1} to process 1
+Process 1 sent {-1,[0, 1],-1} to process 2
+Process 1 sent {-1,[0, 1],-1} to process 3
+Process 1 sent {-1,[0, 1],-1} to process 4
+
+
+Process 2 sent {0,[0, 2],0} to process 0
+Process 2 sent {0,[0, 2],0} to process 1
+Process 2 sent {0,[0, 2],0} to process 2
+Process 2 sent {0,[0, 2],0} to process 3
+Process 2 sent {0,[0, 2],0} to process 4
+
+
+Process 3 sent {0,[0, 3],0} to process 0
+Process 3 sent {0,[0, 3],0} to process 1
+Process 3 sent {0,[0, 3],0} to process 2
+Process 3 sent {0,[0, 3],0} to process 3
+Process 3 sent {0,[0, 3],0} to process 4
+
+
+Process 4 sent {0,[0, 4],0} to process 0
+Process 4 sent {0,[0, 4],0} to process 1
+Process 4 sent {0,[0, 4],0} to process 2
+Process 4 sent {0,[0, 4],0} to process 3
+Process 4 sent {0,[0, 4],0} to process 4
+
+
+Process 5 sent {-1,[0, 5],-1} to process 0
+Process 5 sent {-1,[0, 5],-1} to process 1
+Process 5 sent {-1,[0, 5],-1} to process 2
+Process 5 sent {-1,[0, 5],-1} to process 3
+Process 5 sent {-1,[0, 5],-1} to process 4
+
+
+Process 6 sent {0,[0, 6],0} to process 0
+Process 6 sent {0,[0, 6],0} to process 1
+Process 6 sent {0,[0, 6],0} to process 2
+Process 6 sent {0,[0, 6],0} to process 3
+Process 6 sent {0,[0, 6],0} to process 4
+
+
+
+
+ROUND 2
+
+
+Process 1 sent {0,[0, 6, 1],0} to process 0
+Process 1 sent {0,[0, 6, 1],0} to process 1
+Process 1 sent {0,[0, 6, 1],0} to process 2
+Process 1 sent {0,[0, 6, 1],0} to process 3
+Process 1 sent {0,[0, 6, 1],0} to process 4
+
+
+Process 2 sent {0,[0, 6, 2],0} to process 0
+Process 2 sent {0,[0, 6, 2],0} to process 1
+Process 2 sent {0,[0, 6, 2],0} to process 2
+Process 2 sent {0,[0, 6, 2],0} to process 3
+Process 2 sent {0,[0, 6, 2],0} to process 4
+
+
+Process 3 sent {0,[0, 6, 3],0} to process 0
+Process 3 sent {0,[0, 6, 3],0} to process 1
+Process 3 sent {0,[0, 6, 3],0} to process 2
+Process 3 sent {0,[0, 6, 3],0} to process 3
+Process 3 sent {0,[0, 6, 3],0} to process 4
+
+
+Process 4 sent {0,[0, 6, 4],0} to process 0
+Process 4 sent {0,[0, 6, 4],0} to process 1
+Process 4 sent {0,[0, 6, 4],0} to process 2
+Process 4 sent {0,[0, 6, 4],0} to process 3
+Process 4 sent {0,[0, 6, 4],0} to process 4
+
+
+Process 5 sent {0,[0, 6, 5],0} to process 0
+Process 5 sent {0,[0, 6, 5],0} to process 1
+Process 5 sent {0,[0, 6, 5],0} to process 2
+Process 5 sent {0,[0, 6, 5],0} to process 3
+Process 5 sent {0,[0, 6, 5],0} to process 4
+
+
+Process 6 sent {-1,[0, 5, 6],-1} to process 0
+Process 6 sent {-1,[0, 5, 6],-1} to process 1
+Process 6 sent {-1,[0, 5, 6],-1} to process 2
+Process 6 sent {-1,[0, 5, 6],-1} to process 3
+Process 6 sent {-1,[0, 5, 6],-1} to process 4
+
+
+
+
+Final Output:
+Process 0 [initiator] 0
+Process 1 [faulty]-1
+Process 2 0
+Process 3 0
+Process 4 0
+Process 5 [faulty]-1
+Process 6 0
+
+
+Output 4:
+
+INITIATING
+Process 0 [initiator]
+Process 1
+Process 2
+Process 3
+Process 4 [faulty]
+Process 5 [faulty]
+Process 6
+
+
+ROUND 0 ----
+0 wrote {1,[0],1} to 1
+0 wrote {1,[0],1} to 2
+0 wrote {1,[0],1} to 3
+0 wrote {1,[0],1} to 4
+0 wrote {1,[0],1} to 5
+0 wrote {1,[0],1} to 6
+
+
+ROUND 1
+
+
+Process 1 sent {1,[0, 1],1} to process 0
+Process 1 sent {1,[0, 1],1} to process 1
+Process 1 sent {1,[0, 1],1} to process 2
+Process 1 sent {1,[0, 1],1} to process 3
+Process 1 sent {1,[0, 1],1} to process 4
+
+
+Process 2 sent {1,[0, 2],1} to process 0
+Process 2 sent {1,[0, 2],1} to process 1
+Process 2 sent {1,[0, 2],1} to process 2
+Process 2 sent {1,[0, 2],1} to process 3
+Process 2 sent {1,[0, 2],1} to process 4
+
+
+Process 3 sent {1,[0, 3],1} to process 0
+Process 3 sent {1,[0, 3],1} to process 1
+Process 3 sent {1,[0, 3],1} to process 2
+Process 3 sent {1,[0, 3],1} to process 3
+Process 3 sent {1,[0, 3],1} to process 4
+
+
+Process 4 sent {-1,[0, 4],-1} to process 0
+Process 4 sent {-1,[0, 4],-1} to process 1
+Process 4 sent {-1,[0, 4],-1} to process 2
+Process 4 sent {-1,[0, 4],-1} to process 3
+Process 4 sent {-1,[0, 4],-1} to process 4
+
+
+Process 5 sent {-1,[0, 5],-1} to process 0
+Process 5 sent {-1,[0, 5],-1} to process 1
+Process 5 sent {-1,[0, 5],-1} to process 2
+Process 5 sent {-1,[0, 5],-1} to process 3
+Process 5 sent {-1,[0, 5],-1} to process 4
+
+
+Process 6 sent {1,[0, 6],1} to process 0
+Process 6 sent {1,[0, 6],1} to process 1
+Process 6 sent {1,[0, 6],1} to process 2
+Process 6 sent {1,[0, 6],1} to process 3
+Process 6 sent {1,[0, 6],1} to process 4
+
+
+
+
+ROUND 2
+
+
+Process 1 sent {1,[0, 6, 1],1} to process 0
+Process 1 sent {1,[0, 6, 1],1} to process 1
+Process 1 sent {1,[0, 6, 1],1} to process 2
+Process 1 sent {1,[0, 6, 1],1} to process 3
+Process 1 sent {1,[0, 6, 1],1} to process 4
+
+
+Process 2 sent {1,[0, 6, 2],1} to process 0
+Process 2 sent {1,[0, 6, 2],1} to process 1
+Process 2 sent {1,[0, 6, 2],1} to process 2
+Process 2 sent {1,[0, 6, 2],1} to process 3
+Process 2 sent {1,[0, 6, 2],1} to process 4
+
+
+Process 3 sent {1,[0, 6, 3],1} to process 0
+Process 3 sent {1,[0, 6, 3],1} to process 1
+Process 3 sent {1,[0, 6, 3],1} to process 2
+Process 3 sent {1,[0, 6, 3],1} to process 3
+Process 3 sent {1,[0, 6, 3],1} to process 4
+
+
+Process 4 sent {1,[0, 6, 4],1} to process 0
+Process 4 sent {1,[0, 6, 4],1} to process 1
+Process 4 sent {1,[0, 6, 4],1} to process 2
+Process 4 sent {1,[0, 6, 4],1} to process 3
+Process 4 sent {1,[0, 6, 4],1} to process 4
+
+
+Process 5 sent {1,[0, 6, 5],1} to process 0
+Process 5 sent {1,[0, 6, 5],1} to process 1
+Process 5 sent {1,[0, 6, 5],1} to process 2
+Process 5 sent {1,[0, 6, 5],1} to process 3
+Process 5 sent {1,[0, 6, 5],1} to process 4
+
+
+Process 6 sent {-1,[0, 5, 6],-1} to process 0
+Process 6 sent {-1,[0, 5, 6],-1} to process 1
+Process 6 sent {-1,[0, 5, 6],-1} to process 2
+Process 6 sent {-1,[0, 5, 6],-1} to process 3
+Process 6 sent {-1,[0, 5, 6],-1} to process 4
+
+
+
+
+Final Output:
+Process 0 [initiator] 1
+Process 1 1
+Process 2 1
+Process 3 1
+Process 4 [faulty]-1
+Process 5 [faulty]-1
+Process 6 1
+
