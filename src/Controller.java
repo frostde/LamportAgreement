@@ -47,19 +47,21 @@ public class Controller implements Runnable {
         System.out.println("\n\nROUND 0 ----");
         processes[initiatorpid].initiate();
         while (processVector.size() < 1) { }
-        processVector.clear();
         for (Process p : processes) {
             p.round0();
         }
-        while (processVector.size() < 6) {}
+        while (processVector.size() < 6);
         for (int i = 1; i <= numRounds; i++) {
             System.out.println("\n\nROUND " + i);
             round(i);
+
         }
+        processVector.clear();
 
     }
 
     public void round(int r) {
+
             processVector.clear();
             for (Process p : processes) {
                 p.sendMsgs(r);
@@ -73,15 +75,12 @@ public class Controller implements Runnable {
             while (processVector.size() < 6) {
             }
 
+
     }
-
-
 
     public void processfinished(Process p) {
         this.processVector.add(p);
     }
-
-
 
     public void setUpPorts() {
         ports = new HashMap<>();

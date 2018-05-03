@@ -7,9 +7,7 @@ import java.util.Random;
 import java.util.Vector;
 import java.util.concurrent.Semaphore;
 
-/**
- * Created by danielfrost on 5/2/18.
- */
+
 public class Process implements Runnable {
     public int pid;
     private boolean isInitiator;
@@ -84,13 +82,10 @@ public class Process implements Runnable {
                     if (controller.getProcessSemaphore(entry.getKey()).availablePermits() == 0) {
                         initiatorpid = entry.getKey();
                         reader = new BufferedReader(new InputStreamReader(entry.getValue().getInputStream()));
-                        String in = reader.readLine();
-                        int value = Integer.parseInt(in.substring(in.indexOf("{")+1,in.indexOf(",")));
-                        Message m = new Message(value);
+                        String x = reader.readLine();
+                        Message m = new Message(Integer.parseInt(x.substring(x.indexOf('{')+1, x.indexOf(','))));
                         m.path.add(initiatorpid);
-                        tree.insert(m, 0);
-                        //if (faulty) values[name] = (values[indexOfInitiator] == 0) ? 1 : 0;
-                        //else values[name] = values[indexOfInitiator];
+                        newMessages.add(m);
                     }
                 }
                 controller.processfinished(this);
@@ -102,72 +97,43 @@ public class Process implements Runnable {
 
     public void sendMsgs(int round) {
         try {
-            if (round != 0) {
-                //loop through received messages, and forward these to all others
-                for (Message m : newMessages) {
-                    for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
-                        if (entry.getKey() != initiatorpid) {
-                            writer = new BufferedWriter(new OutputStreamWriter(entry.getValue().getOutputStream()));
-                            writer.write(m.toString() + "\n");
-                            writer.flush();
-                            System.out.println("Process " + pid + " wrote " + m.toString() + " to process " + entry.getKey());
-                        }
+            for (Message m : newMessages) {
+                for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
+                    if (entry.getKey() != initiatorpid) {
+                        writer = new BufferedWriter(new OutputStreamWriter(entry.getValue().getOutputStream()));
+                        writer.write(m.toString() + "\n");
+                        writer.flush();
+                        System.out.println("Process " + pid + " sent " + m.toString() + " to process " + entry.getKey());
                     }
                 }
-            } else {
-                System.out.println("test");
+                System.out.println("\n");
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            newMessages.clear();
+            controller.processfinished(this);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        controller.processfinished(this);
     }
 
     public void receiveMsgs(int round) {
         //receive all messages and insert them into our tree
         try {
-            if (round != 0) {
-                if (!isInitiator) {
-                    for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
-                        if (entry.getKey() != initiatorpid) {
-                            reader = new BufferedReader(new InputStreamReader(entry.getValue().getInputStream()));
-                            String in = reader.readLine();
-                            int value = Integer.parseInt(in.substring(in.indexOf("{") + 1, in.indexOf(",")));
-                            String path = in.substring(in.indexOf("[") + 1, in.indexOf("]"));
-                            Message m = new Message(value);
-                            path = path.replaceAll("\\D+", "");
-                            for (char x : path.toCharArray()) {
-                                m.path.add(Character.getNumericValue(x));
-                            }
-                            //m.path.add(pid);
-                            newMessages.add(m);
-                            //System.out.println("Process " + pid + " received a value of " + m.toString() + " from Process " + entry.getKey());
-                        }
-                    }
-                    //System.out.println(newMessages.size());
-                }
-            } else {
-                if (!isInitiator) {
-                    for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
-                        if (controller.getProcessSemaphore(entry.getKey()).availablePermits() == 0) {
-                            initiatorpid = entry.getKey();
-                            reader = new BufferedReader(new InputStreamReader(entry.getValue().getInputStream()));
-                            String in = reader.readLine();
-                            int value = Integer.parseInt(in.substring(in.indexOf("{") + 1, in.indexOf(",")));
-                            Message m = new Message(value);
-                            m.path.add(initiatorpid);
-                            m.path.add(pid);
-                            tree.insert(m, 0);
-                            System.out.println(pid + " got " + value + " from process " + entry.getKey());
-                        }
+            if (!isInitiator) {
+                for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
+                    if (entry.getKey() != initiatorpid) {
+                        reader = new BufferedReader(new InputStreamReader(entry.getValue().getInputStream()));
+                        String x = reader.readLine();
+                        System.out.println("Process " + pid + " has received " + x + " from process " + entry.getKey());
                     }
                 }
+                System.out.println("\n");
             }
-        } catch(Exception ex){
-                ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        controller.processfinished(this);
     }
+
+
 
     /*public void initiate() {
         try {
