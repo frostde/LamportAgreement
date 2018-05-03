@@ -85,6 +85,14 @@ public class Process implements Runnable {
                         String x = reader.readLine();
                         Message m = new Message(Integer.parseInt(x.substring(x.indexOf('{')+1, x.indexOf(','))));
                         m.path.add(initiatorpid);
+                        Vector<Message> v = new Vector<>();
+                        v.add(m);
+                        tree.insert(v, 0);
+                        Vector<Message> t = new Vector<>();
+                        Message p = new Message(m);
+                        t.add(p);
+                        p.path.add(pid);
+                        tree.insert(t, 1);
                         newMessages.add(m);
                     }
                 }
@@ -97,16 +105,18 @@ public class Process implements Runnable {
 
     public void sendMsgs(int round) {
         try {
+            StringBuilder sb = new StringBuilder();
+            System.out.println(newMessages.size());
             for (Message m : newMessages) {
-                for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
-                    if (entry.getKey() != initiatorpid) {
-                        writer = new BufferedWriter(new OutputStreamWriter(entry.getValue().getOutputStream()));
-                        writer.write(m.toString() + "\n");
-                        writer.flush();
-                        System.out.println("Process " + pid + " sent " + m.toString() + " to process " + entry.getKey());
-                    }
+                m.path.add(pid);
+                sb.append(m.toString() + "\n");
+            }
+            for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
+                if (entry.getKey() != initiatorpid) {
+                    writer = new BufferedWriter(new OutputStreamWriter(entry.getValue().getOutputStream()));
+                    writer.write(sb.toString());
+                    writer.flush();
                 }
-                System.out.println("\n");
             }
             newMessages.clear();
             controller.processfinished(this);
@@ -118,16 +128,53 @@ public class Process implements Runnable {
     public void receiveMsgs(int round) {
         //receive all messages and insert them into our tree
         try {
+            BufferedReader READER;
+            DataInputStream is = null;
+            DataInputStream stdIn = new DataInputStream(System.in);
             if (!isInitiator) {
                 for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
                     if (entry.getKey() != initiatorpid) {
-                        reader = new BufferedReader(new InputStreamReader(entry.getValue().getInputStream()));
-                        String x = reader.readLine();
-                        System.out.println("Process " + pid + " has received " + x + " from process " + entry.getKey());
+                        READER = new BufferedReader(new InputStreamReader(entry.getValue().getInputStream()));
+                        is = new DataInputStream(entry.getValue().getInputStream());
+                        if (round == 1) {
+                            String x = READER.readLine();
+                            Message n = new Message(Integer.parseInt(x.substring(x.indexOf('{')+1, x.indexOf(','))));
+                            String path = x.substring(x.indexOf('[')+1, x.indexOf(']'));
+                            path = path.replaceAll("\\D+","");
+                            for (char c : path.toCharArray()) {
+                                n.path.add(Integer.parseInt(Character.toString(c)));
+                            }
+                            newMessages.add(n);
+                        } else {
+                            int c;
+                            StringBuilder sb = new StringBuilder();
+                            while (is.available() != 0) {
+                                c = is.read();
+                                sb.append((char)c);
+                            }
+                            System.out.println("Process " + pid + " from " + entry.getKey());
+                            for (String s : sb.toString().split("\n") ) {
+                                Message n = new Message(Integer.parseInt(s.substring(s.indexOf('{')+1, s.indexOf(','))));
+                                String path = s.substring(s.indexOf('[')+1, s.indexOf(']'));
+                                path = path.replaceAll("\\D+","");
+                                for (char x : path.toCharArray()) {
+                                    n.path.add(Integer.parseInt(Character.toString(x)));
+                                }
+                                newMessages.add(n);
+                            }
+                        }
                     }
                 }
+                tree.insert(newMessages, round);
                 System.out.println("\n");
             }
+            controller.processfinished(this);
+            System.out.println("Process " + pid + ":");
+            for (MessageNode n : tree.root.children) {
+                System.out.println(n.message.toString());
+            }
+            System.out.println(tree.root.children.size());
+            System.out.println("\n");
         } catch (Exception e) {
             e.printStackTrace();
         }

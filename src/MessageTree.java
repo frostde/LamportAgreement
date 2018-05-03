@@ -49,18 +49,14 @@ public class MessageTree {
             root = new MessageNode();
             root.parent = null;
             root.message = m;
-            //System.out.println("\t[" + ownerpid + "] insert(..round 0..) -> root " + root);
+            System.out.println("\t[" + ownerpid + "] insert(..round 0..) -> root " + root);
         } else {
             MessageNode parent = findParent(m, round);
             MessageNode node = new MessageNode();
             node.message = m;
             parent.children.add(node);
-            //System.out.println("\t[" + ownerpid + "]insert(" + m + "," + round + " ) -> parent " + parent.message);
+            System.out.println("\t[" + ownerpid + "]insert(" + m + "," + round + " ) -> parent " + parent.message);
         }
     }
-
-
-
-
 
 }
