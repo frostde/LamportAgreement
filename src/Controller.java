@@ -47,7 +47,12 @@ public class Controller implements Runnable {
         System.out.println("\n\nROUND 0 ----");
         processes[initiatorpid].initiate();
         while (processVector.size() < 1) { }
-        for (int i = 0; i <= numRounds; i++) {
+        processVector.clear();
+        for (Process p : processes) {
+            p.round0();
+        }
+        while (processVector.size() < 6) {}
+        for (int i = 1; i <= numRounds; i++) {
             System.out.println("\n\nROUND " + i);
             round(i);
         }

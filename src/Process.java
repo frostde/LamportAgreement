@@ -76,6 +76,30 @@ public class Process implements Runnable {
         }
     }
 
+    public void round0() {
+        try {
+            if (!isInitiator) {
+                BufferedReader reader;
+                for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
+                    if (controller.getProcessSemaphore(entry.getKey()).availablePermits() == 0) {
+                        initiatorpid = entry.getKey();
+                        reader = new BufferedReader(new InputStreamReader(entry.getValue().getInputStream()));
+                        String in = reader.readLine();
+                        int value = Integer.parseInt(in.substring(in.indexOf("{")+1,in.indexOf(",")));
+                        Message m = new Message(value);
+                        m.path.add(initiatorpid);
+                        tree.insert(m, 0);
+                        //if (faulty) values[name] = (values[indexOfInitiator] == 0) ? 1 : 0;
+                        //else values[name] = values[indexOfInitiator];
+                    }
+                }
+                controller.processfinished(this);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void sendMsgs(int round) {
         try {
             if (round != 0) {
@@ -135,14 +159,6 @@ public class Process implements Runnable {
                             m.path.add(pid);
                             tree.insert(m, 0);
                             System.out.println(pid + " got " + value + " from process " + entry.getKey());
-                        }
-                    }
-                    for (Map.Entry<Integer, Socket> entry : sockets.entrySet()) {
-                        if (entry.getKey() != initiatorpid) {
-                            writer = new BufferedWriter(new OutputStreamWriter(entry.getValue().getOutputStream()));
-                            writer.write(tree.root.message.toString() + "\n");
-                            writer.flush();
-                            System.out.println("Process " + pid + " wrote " + tree.root.message.toString() + " to process " + entry.getKey());
                         }
                     }
                 }
